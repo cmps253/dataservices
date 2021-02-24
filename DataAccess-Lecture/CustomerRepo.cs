@@ -49,10 +49,9 @@ namespace Cmps253.Spring2021.DataAccess
             reader.Close();
             return Customers;
         }
-
         public Customer GetCustomerById(int customerId)
         {
-            var cmd = new SqlCommand($"select CustomerID,FirstName,LastName,EmailAddress from [SalesLT].[Customer] where customerId = {customerId}", cn);
+            var cmd = new SqlCommand($"select CustomerID,FirstName,LastName,EmailAddress from [SalesLT].[Customer] where customerId={customerId}", cn);
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -69,10 +68,9 @@ namespace Cmps253.Spring2021.DataAccess
             reader.Close();
             return null;
         }
-        public List<Customer> GetCustomerByLastName(string lastName)
+        public Customer GetCustomerByLastName(string lastName)
         {
-            var customers = new List<Customer>();
-            var cmd = new SqlCommand($"select CustomerID,FirstName,LastName,EmailAddress from [SalesLT].[Customer] where lastname = '{lastName}'", cn);
+            var cmd = new SqlCommand($"select CustomerID,FirstName,LastName,EmailAddress from [SalesLT].[Customer] where lastname='{lastName}'", cn);
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -84,10 +82,10 @@ namespace Cmps253.Spring2021.DataAccess
                 {
                     email = reader.GetString(3);
                 }
-                customers.Add(new Customer(id, firstname, lastname, email));
+                return new Customer(id, firstname, lastname, email);
             }
             reader.Close();
-            return customers;
+            return null;
         }
         public void Insert(Customer c)
         {

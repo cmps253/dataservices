@@ -35,9 +35,8 @@ namespace CloudCustomerRepo
         [FunctionName("GetCustomers")]
         public static async Task<IActionResult> GetCustomers([HttpTrigger(AuthorizationLevel.Function, "get", Route = "customers")] HttpRequest req, ILogger log)
         {
-
-            var customerRepo = new CustomerRepo(new ConnectionString());
             string lastName = req.Query["ln"];
+            var customerRepo = new CustomerRepo(new ConnectionString());
             if (string.IsNullOrWhiteSpace(lastName))
             {
                 return new OkObjectResult(customerRepo.GetCustomers());
@@ -46,19 +45,17 @@ namespace CloudCustomerRepo
             {
                 return new OkObjectResult(customerRepo.GetCustomerByLastName(lastName));
             }
-
         }
 
         [FunctionName("GetCustomerById")]
         public static async Task<IActionResult> GetCustomerById([HttpTrigger(AuthorizationLevel.Function, "get", Route = "customers/{id}")] HttpRequest req, string id, ILogger log)
         {
             var customerRepo = new CustomerRepo(new ConnectionString());
-            Customer customer = customerRepo.GetCustomerById(int.Parse(id));
-            return new OkObjectResult(customer);
+            return new OkObjectResult(customerRepo.GetCustomerById(int.Parse(id)));
         }
 
-        [FunctionName("DeleteCustomer")]
-        public static async Task<IActionResult> DeleteCustomer([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "customers/{id}")] HttpRequest req, string id, ILogger log)
+        [FunctionName("DeleteCustomerById")]
+        public static async Task<IActionResult> DeleteCustomerById([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "customers/{id}")] HttpRequest req, string id, ILogger log)
         {
             var customerRepo = new CustomerRepo(new ConnectionString());
             customerRepo.Delete(int.Parse(id));
@@ -74,5 +71,6 @@ namespace CloudCustomerRepo
             customerRepo.Insert(c);
             return new OkObjectResult("ok");
         }
+
     }
 }

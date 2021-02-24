@@ -28,7 +28,22 @@ namespace Cmps253.Spring2021.DataAccess
             reader.Close();
             return Customers;
         }
+        public Customer GetCustomerById(int customerId)
+        {
+            var cmd = new SqlCommand($"select CustomerID,FirstName,LastName,EmailAddress from [SalesLT].[Customer] where customerId = {customerId} ", cn);
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string firstname = reader.GetString(1);
+                string lastname = reader.GetString(2);
+                string email = reader.GetString(3);
 
+                return new Customer(id, firstname, lastname, email);
+            }
+            reader.Close();
+            return null;
+        }
         public void UpdateCustomer(Customer customer)
         {
             var cmd = new SqlCommand($"UPDATE [SalesLT].[Customer] set EmailAddress='{customer.Email}' where  CustomerID={customer.CustomerId}", cn);
